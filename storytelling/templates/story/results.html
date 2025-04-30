@@ -1,10 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Financial Analysis Results</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
+    <h1>Financial Analysis</h1>
 
+    <div>
+        <h2>AI-Generated Story</h2>
+        <pre>{{ story }}</pre>
+    </div>
+
+    <div>
+        <h2>Sankey Diagram</h2>
+        {% if sankey_labels %}
+        <div id="sankeyDiagram"></div>
+        <script>
+            const data = {
+                type: "sankey",
+                orientation: "h",
+                node: {
+                    pad: 15,
+                    thickness: 20,
+                    line: { color: "black", width: 0.5 },
+                    label: {{ sankey_labels|safe }},
+                },
+                link: {
+                    source: {{ sankey_sources|safe }},
+                    target: {{ sankey_targets|safe }},
+                    value: {{ sankey_values|safe }},
+                }
+            };
+
+            const layout = {
+                title: "Financial Flow Overview",
+                font: { size: 12 }
+            };
+
+            Plotly.newPlot("sankeyDiagram", [data], layout);
+        </script>
+        {% else %}
+        <p>No Sankey diagram data available.</p>
+        {% endif %}
+    </div>
+
+    <a href="{% url 'index' %}">← Analyze another document</a>
 </body>
 </html>
